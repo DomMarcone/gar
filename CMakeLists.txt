@@ -10,15 +10,7 @@ set(TEST_DIRECTORY test)
 
 include_directories( ${INCLUDE_DIRECTORY} )
 
-
-#copy testdata_0 to build directory
-if(WIN32 AND Release)
-	FILE(COPY ${TEST_DIRECTORY}/testdata_0 DESTINATION "${CMAKE_BINARY_DIR}/Release")
-elseif(WIN32)#debug version
-	FILE(COPY ${TEST_DIRECTORY}/testdata_0 DESTINATION "${CMAKE_BINARY_DIR}/Debug")
-else(WIN32 AND Release)#not windows
-	FILE(COPY ${TEST_DIRECTORY}/testdata_0 DESTINATION "${CMAKE_BINARY_DIR}")
-endif(WIN32 AND Release)
+set(BUILD_TESTS FALSE)
 
 
 #gps_types
@@ -72,26 +64,26 @@ target_link_libraries(DataCollection
 #target_link_libraries(triangluate signal_solver)
 
 
-
-#Tests
-add_executable(gps_test ${TEST_DIRECTORY}/gps_test.cpp)
-target_link_libraries(gps_test gps_type)
-
-
-add_executable(solver_test ${TEST_DIRECTORY}/solver_test.cpp)
-target_link_libraries(solver_test 
-	gps_type
-	LocationSolver
-)
+if(BUILD_TESTS)
+	#Tests
+	add_executable(gps_test ${TEST_DIRECTORY}/gps_test.cpp)
+	target_link_libraries(gps_test gps_type)
 
 
-add_executable( data_test ${TEST_DIRECTORY}/data_test.cpp)
-target_link_libraries( data_test 
-	gps_type
-	LocationSolver
-	DataCollection
-)
+	add_executable(solver_test ${TEST_DIRECTORY}/solver_test.cpp)
+	target_link_libraries(solver_test 
+		gps_type
+		LocationSolver
+	)
 
+
+	add_executable( data_test ${TEST_DIRECTORY}/data_test.cpp)
+	target_link_libraries( data_test 
+		gps_type
+		LocationSolver
+		DataCollection
+	)
+endif(BUILD_TESTS)
 
 #actual software
 add_executable( gar ${SOURCES_DIRECTORY}/gar.cpp )
