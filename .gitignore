@@ -33,6 +33,4 @@
 
 build/*
 
-#specific to this project
-inc/precision_t.h
 
