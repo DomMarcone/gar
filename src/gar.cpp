@@ -9,12 +9,12 @@
 
 #include <cstdlib>
 #include <ctime>
-
+#include <cmath>
 #include <cstring>
 
 #include <thread>
 
-#define DEFAULT_NOISE_FLOOR 31.6227766
+#define DEFAULT_NOISE_FLOOR -40
 #define DEFAULT_FILE_OUT "result.kml"
 #define DEFAULT_THREADS 4
 
@@ -203,6 +203,9 @@ void main(int argc, char *argv[]){
 		rd.load(file_radio);
 		
 		printf("Begining solver...\n");
+		
+		//convert to intensity
+		noise_floor = 1000.0 * pow( 10.0, noise_floor/20.0);
 		
 		solver_thread = (std::thread**)malloc(sizeof(std::thread*) * thread_count);
 		
