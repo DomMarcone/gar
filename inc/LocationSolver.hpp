@@ -27,7 +27,6 @@ private :
 	precision_t error_level;
 	
 	void sort_frames();
-	void drop_noisy_frames();//drop frames below noise floor
 	
 	xyz_t *find_center();//finds weighted average
 	xyz_t *weighted_center();//finds weighted average
@@ -50,8 +49,6 @@ public :
 	LocationSolver();
 	~LocationSolver();
 	
-	void setNoiseFloor(precision_t nf);
-	precision_t getNoiseFloor();
 	
 	void setMaxSolverSteps(size_t s);
 	size_t getMaxSolverSteps();

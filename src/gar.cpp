@@ -19,7 +19,8 @@
 #define DEFAULT_THREADS 4
 
 
-void thread_function(RadioData *rd, 
+void thread_function(
+	RadioData *rd, 
 	GpsData *gd, 
 	const char *outfile, 
 	precision_t noise_floor, 
@@ -28,9 +29,7 @@ void thread_function(RadioData *rd,
 		
 	LocationSolver ls;
 	FILE *fp;
-	
-	ls.setNoiseFloor(noise_floor);
-	
+		
 	for(size_t i=th_offset;i<rd->size();i += th_count){
 		frequency_t *f = rd->getFrequency(i);
 		
@@ -45,7 +44,8 @@ void thread_function(RadioData *rd,
 			
 			
 			if( gd->getStartTime() <= timestamp && 
-				timestamp <= gd->getEndTime() )
+				timestamp <= gd->getEndTime() &&
+				intensity >= noise_floor )
 			{
 				xyz_t xyz_temp;
 				
@@ -61,7 +61,6 @@ void thread_function(RadioData *rd,
 		}
 		
 		temp_xyz = (precision_t*)ls.solve();
-		to_gps(&temp_gps, (xyz_t*)temp_xyz);
 		/*
 		if( temp_xyz!=0 && 
 			ls.getErrorLevel() < 21.0 &&
@@ -70,13 +69,14 @@ void thread_function(RadioData *rd,
 			{
 			*/
 		if( temp_xyz!=0 ){
-				
-				printf("Source approximation of %6.3f mhz\t%f %f %fm\n", 
-					f->hz/1000000.0,
-					temp_gps.longitude,
-					temp_gps.latitude,
-					temp_gps.altitude
-				);
+			to_gps(&temp_gps, (xyz_t*)temp_xyz);
+			
+			printf("Source approximation of %6.3f mhz\t%f %f %fm\n", 
+				f->hz/1000000.0,
+				temp_gps.longitude,
+				temp_gps.latitude,
+				temp_gps.altitude
+			);
 				
 			fp = fopen(outfile,"a");
 			fprintf(fp,
@@ -202,6 +202,19 @@ void main(int argc, char *argv[]){
 		gd.load(file_gps);
 		rd.load(file_radio);
 		
+		printf(
+			"\n"
+			"Solver Parameters :\n"
+			"  gps file            : %s\n"
+			"  radio file          : %s\n"
+			"  output file         : %s\n"
+			"  threads             : %d\n"
+			"  noise floor cuttoff : %f\n"
+			"\n",
+			file_gps, file_radio, file_out,
+			thread_count, noise_floor
+		);
+		
 		printf("Begining solver...\n");
 		
 		//convert to intensity
@@ -220,7 +233,8 @@ void main(int argc, char *argv[]){
 		//main thread
 		thread_function(
 			&rd, &gd, 
-			file_out, noise_floor, 
+			file_out, 
+			noise_floor, 
 			thread_count, 0);
 		
 		//join previously generated threads...
@@ -228,7 +242,6 @@ void main(int argc, char *argv[]){
 			solver_thread[i-1]->join();
 		}
 		
-		free(solver_thread);
 		
 		fp = fopen(file_out,"a");
 		fprintf(fp,
@@ -242,6 +255,8 @@ void main(int argc, char *argv[]){
 		for(int i=1;i<thread_count;++i){
 			delete solver_thread[i-1];
 		}
+		
+		free(solver_thread);
 	} else {
 		print_usage();
 		printf(

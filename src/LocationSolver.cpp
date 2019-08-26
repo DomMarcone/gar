@@ -54,9 +54,6 @@ void LocationSolver::addFrame(gps_t *gps, precision_t strength){
 }
 
 
-void LocationSolver::setNoiseFloor(precision_t nf){noise_floor = nf;}
-precision_t LocationSolver::getNoiseFloor(){return noise_floor;}
-
 void LocationSolver::setMaxSolverSteps(size_t s){max_solver_steps = s;}
 size_t LocationSolver::getMaxSolverSteps(){return max_solver_steps;}
 
@@ -192,16 +189,15 @@ xyz_t *LocationSolver::solve(){
 	if(!solver_ran){
 		xyz_t cursor;
 		precision_t *temp;
-		
-		drop_noisy_frames();
-		sort_frames();
-		
+				
 		//initial sanity check
 		if(frame.size() < 4){
 			//printf("LocationSolver : ERROR : There aren't enough frames to solve! Need 4; found %d",
 			//frame.size());
 			return 0;
 		}
+		
+		sort_frames();
 		
 		temp = (precision_t *)weighted_center();
 		//temp = (precision_t *)find_center();
@@ -333,17 +329,6 @@ void LocationSolver::sort_frames(){
 			frame[i].strength
 			);
 	}*/
-}
-
-
-void LocationSolver::drop_noisy_frames(){
-	for(size_t i=0;i<frame.size();++i){
-		if(frame[i].strength < noise_floor){
-			//printf("Dropping noisy frame %lf < %lf\n",frame[i].strength, noise_floor);
-			frame.erase(frame.begin() + i);
-			i--;//keep in place
-		}
-	}
 }
 
 
