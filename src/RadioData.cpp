@@ -88,10 +88,8 @@ void RadioData::load(const char * filename){
 			
 			while(current_freq <= end_freq){
 				float intensity = atof((const char *)&temp_line[current_position]);
-
-				//if(((int)current_freq)%100 == 0){
+				
 				addData(current_freq,intensity,timestamp);
-				//}
 				
 				//advance the line and frequency to the next position
 				current_position++;

@@ -339,7 +339,9 @@ void LocationSolver::sort_frames(){
 void LocationSolver::drop_noisy_frames(){
 	for(size_t i=0;i<frame.size();++i){
 		if(frame[i].strength < noise_floor){
+			//printf("Dropping noisy frame %lf < %lf\n",frame[i].strength, noise_floor);
 			frame.erase(frame.begin() + i);
+			i--;//keep in place
 		}
 	}
 }

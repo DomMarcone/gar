@@ -207,7 +207,7 @@ void main(int argc, char *argv[]){
 		//convert to intensity
 		noise_floor = 1000.0 * pow( 10.0, noise_floor/20.0);
 		
-		solver_thread = (std::thread**)malloc(sizeof(std::thread*) * thread_count);
+		solver_thread = (std::thread**)malloc(sizeof(std::thread*) * (thread_count-1));
 		
 		for(int i=1;i<thread_count;++i){
 			solver_thread[i-1] = 
@@ -226,12 +226,11 @@ void main(int argc, char *argv[]){
 		//join previously generated threads...
 		for(int i=1;i<thread_count;++i){
 			solver_thread[i-1]->join();
-			delete solver_thread;
 		}
 		
 		free(solver_thread);
 		
-		fopen(file_out,"a");
+		fp = fopen(file_out,"a");
 		fprintf(fp,
 			"\t</Document>\n"
 			"</kml>\n"
@@ -239,6 +238,10 @@ void main(int argc, char *argv[]){
 		fclose(fp);
 		
 		printf("done!\n");
+		
+		for(int i=1;i<thread_count;++i){
+			delete solver_thread[i-1];
+		}
 	} else {
 		print_usage();
 		printf(
