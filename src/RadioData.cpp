@@ -1,12 +1,13 @@
 //RadioData.cpp
 
+#include <RadioData.hpp>
+
 #include <cstdlib>
 #include <ctime>
 #include <vector>
 
-
-#include <RadioData.hpp>
-
+#include <stdio.h>
+#include <string.h>
 
 #define TEMP_LINE_LENGTH 4096
 

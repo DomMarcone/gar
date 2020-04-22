@@ -3,13 +3,16 @@
 #ifndef _GPS_DATA_HPP
 #define _GPS_DATA_HPP
 
+#include <precision_t.h>
+#include <gps_t.h>
+
 #include <cstdlib>
 #include <ctime>
 #include <vector>
 
-#include <precision_t.h>
-#include <gps_t.h>
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct {
 	gps_t g;

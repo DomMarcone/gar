@@ -8,10 +8,11 @@ set(INCLUDE_DIRECTORY inc)
 set(SOURCES_DIRECTORY src)
 set(TEST_DIRECTORY test)
 
+find_package( Threads )
+
 include_directories( ${INCLUDE_DIRECTORY} )
 
 set(BUILD_TESTS FALSE)
-
 
 #gps_types
 set(GPS_TYPE_SOURCES
@@ -37,6 +38,7 @@ add_library(LocationSolver
 	${LOCATION_SOLVER_HEADERS}
 )
 target_link_libraries(LocationSolver gps_type)
+target_link_libraries(LocationSolver ${CMAKE_THREAD_LIBS_INIT})
 
 #DataCollection
 set(DATA_COLLECTION_SOURCES
@@ -57,7 +59,6 @@ target_link_libraries(DataCollection
 	gps_type
 	LocationSolver
 )
-
 
 
 #add_executable(triangluate ${TRIANGULATE_SOURCES})

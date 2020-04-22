@@ -15,9 +15,9 @@
 #include <thread>
 
 #define DEFAULT_NOISE_FLOOR -40
-#define DEFAULT_FILE_OUT "result.kml"
 #define DEFAULT_THREADS 4
 
+const char *  DEFAULT_FILE_OUT = "result.kml";
 
 void thread_function(
 	RadioData *rd, 
@@ -53,7 +53,7 @@ void thread_function(
 				temp_gps.longitude = temp_gps_ptr->longitude;
 				temp_gps.latitude = temp_gps_ptr->latitude;
 				temp_gps.altitude = temp_gps_ptr->altitude;
-				to_xyz(&xyz_temp, &temp_gps);
+				to_xyz(xyz_temp, &temp_gps);
 				
 				ls.addFrame(xyz_temp,intensity);
 				//ls.addFrame(temp_gps,intensity);
@@ -69,7 +69,7 @@ void thread_function(
 			{
 			*/
 		if( temp_xyz!=0 ){
-			to_gps(&temp_gps, (xyz_t*)temp_xyz);
+			to_gps(&temp_gps, temp_xyz);
 			
 			printf("Source approximation of %6.3f mhz\t%f %f %fm\n", 
 				f->hz/1000000.0,
@@ -131,7 +131,7 @@ void print_options(){
 }
 
 
-void main(int argc, char *argv[]){
+int main(int argc, char *argv[]){
 	GpsData gd;
 	RadioData rd;
 	//std::thread *solver_thread[THREADS-1];
@@ -140,7 +140,7 @@ void main(int argc, char *argv[]){
 	bool solve = false;
 	
 	int thread_count = DEFAULT_THREADS;
-	char *file_out = DEFAULT_FILE_OUT;
+	const char *file_out = DEFAULT_FILE_OUT;
 	precision_t noise_floor = DEFAULT_NOISE_FLOOR;
 	char *file_gps=0, *file_radio=0;
 	
@@ -263,4 +263,6 @@ void main(int argc, char *argv[]){
 			"Try `gar --help' for more info.\n"
 		);
 	}
+
+	return 0;
 }

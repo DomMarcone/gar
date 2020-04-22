@@ -1,13 +1,17 @@
 //GpsData.cpp
 
-#include <cstdlib>
-#include <ctime>
-#include <vector>
+#include <GpsData.hpp>
 
 #include <precision_t.h>
 #include <gps_t.h>
 
-#include <GpsData.hpp>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define TEMP_LINE_LENGTH 192
 

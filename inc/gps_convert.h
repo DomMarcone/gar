@@ -14,9 +14,9 @@ extern "C" {
 #define SEA_LEVEL 6371000.f
 
 
-void to_gps(gps_t *target, xyz_t *source);
+void to_gps(gps_t *target, xyz_t source);
 
-void to_xyz(xyz_t *target, gps_t *source);
+void to_xyz(xyz_t target, gps_t *source);
 
 
 #ifdef __cplusplus

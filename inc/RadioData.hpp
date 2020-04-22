@@ -6,6 +6,9 @@
 #include <cstdlib>
 #include <vector>
 
+#include <stdio.h>
+#include <string.h>
+
 typedef struct {
 	float i;//intensity
 	time_t t;//time

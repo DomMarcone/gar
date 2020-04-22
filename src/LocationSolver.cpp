@@ -45,7 +45,7 @@ void LocationSolver::addFrame(xyz_t xyz, precision_t strength){
 void LocationSolver::addFrame(gps_t *gps, precision_t strength){
 	frame_t temp;
 	xyz_t xyz;
-	to_xyz(&xyz, gps);
+	to_xyz(xyz, gps);
 	temp.position[0] = xyz[0];
 	temp.position[1] = xyz[1];
 	temp.position[2] = xyz[2];
