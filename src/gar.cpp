@@ -5,7 +5,8 @@
 #include <gps_convert.h>
 #include <GpsData.hpp>
 #include <RadioData.hpp>
-#include <LocationSolver.hpp>
+#include <LocationSolverInterface.hpp>
+#include <LocationSolverBST.hpp>
 
 #include <cstdlib>
 #include <ctime>
@@ -27,7 +28,7 @@ void thread_function(
 	int th_count, 
 	int th_offset){
 		
-	LocationSolver ls;
+	LocationSolverInterface *ls = new LocationSolverBST();
 	FILE *fp;
 		
 	for(size_t i=th_offset;i<rd->size();i += th_count){
@@ -55,12 +56,12 @@ void thread_function(
 				temp_gps.altitude = temp_gps_ptr->altitude;
 				to_xyz(xyz_temp, &temp_gps);
 				
-				ls.addFrame(xyz_temp,intensity);
+				ls->addFrame(xyz_temp,intensity);
 				//ls.addFrame(temp_gps,intensity);
 			}
 		}
 		
-		temp_xyz = (precision_t*)ls.solve();
+		temp_xyz = (precision_t*)ls->solve();
 		/*
 		if( temp_xyz!=0 && 
 			ls.getErrorLevel() < 21.0 &&
@@ -90,7 +91,7 @@ void thread_function(
 				"\t\t</Placemark>\n",
 				f->hz/1000000.0,
 				f->hz,
-				(float)ls.getErrorLevel(),
+				(float)ls->getErrorLevel(),
 				temp_gps.latitude,
 				temp_gps.longitude,
 				temp_gps.altitude
@@ -99,7 +100,7 @@ void thread_function(
 				
 		}
 		
-		ls.clean();		
+		ls->clean();
 	}
 	
 }

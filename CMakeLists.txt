@@ -26,11 +26,13 @@ add_library( gps_type ${GPS_TYPE_SOURCES} )
 
 #LocationSolver
 set(LOCATION_SOLVER_SOURCES
-	${SOURCES_DIRECTORY}/LocationSolver.cpp
+	${SOURCES_DIRECTORY}/LocationSolverInterface.cpp
+	${SOURCES_DIRECTORY}/LocationSolverBST.cpp
 )
 
 set(LOCATION_SOLVER_HEADERS
-	${INCLUDE_DIRECTORY}/LocationSolver.hpp
+	${INCLUDE_DIRECTORY}/LocationSolverInterface.hpp
+	${INCLUDE_DIRECTORY}/LocationSolverBST.hpp
 )
 
 add_library(LocationSolver 

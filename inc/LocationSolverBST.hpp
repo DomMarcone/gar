@@ -1,7 +1,9 @@
-//LocationSolver.hpp
+//LocationSolverBST.hpp
 #pragma once
-#ifndef _LOCATION_SOLVER_HPP
-#define _LOCATION_SOLVER_HPP
+#ifndef _LOCATION_SOLVER_BST_HPP
+#define _LOCATION_SOLVER_BST_HPP
+
+#include <LocationSolverInterface.hpp>
 
 #include <precision_t.h>
 #include <gps_t.h>
@@ -15,7 +17,7 @@ typedef struct {
 } frame_t;
 
 
-class LocationSolver {
+class LocationSolverBST : public LocationSolverInterface {
 private :
 	std::vector<frame_t> frame;
 	
@@ -46,8 +48,8 @@ private :
 	precision_t min_solver_res;
 	
 public :
-	LocationSolver();
-	~LocationSolver();
+	LocationSolverBST();
+	~LocationSolverBST();
 	
 	
 	void setMaxSolverSteps(size_t s);

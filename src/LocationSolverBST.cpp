@@ -1,4 +1,4 @@
-//LocationSolver.cpp
+//LocationSolverBST.cpp
 
 #include <cmath>
 #include <stdio.h>
@@ -6,9 +6,10 @@
 #include <precision_t.h>
 #include <gps_t.h>
 #include <gps_convert.h>
-#include <LocationSolver.hpp>
+#include <LocationSolverInterface.hpp>
+#include <LocationSolverBST.hpp>
 
-LocationSolver::LocationSolver(){
+LocationSolverBST::LocationSolverBST() {
 	solver_ran = false;
 	noise_floor = 0.0;
 	result_xyz[0] = 0.0;
@@ -20,11 +21,11 @@ LocationSolver::LocationSolver(){
 	//printf("LocationSolver : constructor called.\n");
 }
 
-LocationSolver::~LocationSolver(){
+LocationSolverBST::~LocationSolverBST() {
 	clean();
 }
 
-void LocationSolver::addFrame(precision_t x, precision_t y, precision_t z, precision_t strength){
+void LocationSolverBST::addFrame(precision_t x, precision_t y, precision_t z, precision_t strength){
 	frame_t temp;
 	temp.position[0] = x;
 	temp.position[1] = y;
@@ -33,7 +34,7 @@ void LocationSolver::addFrame(precision_t x, precision_t y, precision_t z, preci
 	frame.push_back(temp);
 }
 
-void LocationSolver::addFrame(xyz_t xyz, precision_t strength){
+void LocationSolverBST::addFrame(xyz_t xyz, precision_t strength){
 	frame_t temp;
 	temp.position[0] = xyz[0];
 	temp.position[1] = xyz[1];
@@ -42,7 +43,7 @@ void LocationSolver::addFrame(xyz_t xyz, precision_t strength){
 	frame.push_back(temp);
 }
 
-void LocationSolver::addFrame(gps_t *gps, precision_t strength){
+void LocationSolverBST::addFrame(gps_t *gps, precision_t strength){
 	frame_t temp;
 	xyz_t xyz;
 	to_xyz(xyz, gps);
@@ -54,11 +55,11 @@ void LocationSolver::addFrame(gps_t *gps, precision_t strength){
 }
 
 
-void LocationSolver::setMaxSolverSteps(size_t s){max_solver_steps = s;}
-size_t LocationSolver::getMaxSolverSteps(){return max_solver_steps;}
+void LocationSolverBST::setMaxSolverSteps(size_t s){max_solver_steps = s;}
+size_t LocationSolverBST::getMaxSolverSteps(){return max_solver_steps;}
 
-void LocationSolver::setMinSolverRes(precision_t s){min_solver_res = s;}
-precision_t LocationSolver::getMinSolverRes(){return min_solver_res;}
+void LocationSolverBST::setMinSolverRes(precision_t s){min_solver_res = s;}
+precision_t LocationSolverBST::getMinSolverRes(){return min_solver_res;}
 
 precision_t get_dist(xyz_t a, xyz_t b){
 	precision_t x, y, z;
@@ -114,7 +115,7 @@ precision_t calculate_expected_value(precision_t distance, precision_t strength)
 }
 
 
-precision_t LocationSolver::test_point( xyz_t source ){
+precision_t LocationSolverBST::test_point( xyz_t source ){
 	precision_t result = 0.0;
 	precision_t strength, max = 0.0;
 	static precision_t inverse_res = 1.0/min_solver_res;
@@ -145,7 +146,7 @@ precision_t LocationSolver::test_point( xyz_t source ){
 }
 
 
-void LocationSolver::refine_axis(xyz_t cursor, 
+void LocationSolverBST::refine_axis(xyz_t cursor,
 	precision_t amount, 
 	size_t axis){
 	
@@ -168,7 +169,7 @@ void LocationSolver::refine_axis(xyz_t cursor,
 }
 
 
-void LocationSolver::refine_cursor(xyz_t cursor, 
+void LocationSolverBST::refine_cursor(xyz_t cursor,
 	precision_t amount, 
 	size_t remaining_itterations){
 	
@@ -185,7 +186,7 @@ void LocationSolver::refine_cursor(xyz_t cursor,
 }
 
 
-xyz_t *LocationSolver::solve(){
+xyz_t * LocationSolverBST::solve(){
 	if(!solver_ran){
 		xyz_t cursor;
 		precision_t *temp;
@@ -240,10 +241,10 @@ xyz_t *LocationSolver::solve(){
 }
 
 
-precision_t LocationSolver::getErrorLevel(){return error_level; }
+precision_t LocationSolverBST::getErrorLevel(){return error_level; }
 
 
-void LocationSolver::clean(){
+void LocationSolverBST::clean(){
 	
 	frame.erase(frame.begin(), frame.end());
 	
@@ -317,7 +318,7 @@ void merge_sort(std::vector<frame_t> *a, size_t left, size_t right){
 	}
 }
 
-void LocationSolver::sort_frames(){
+void LocationSolverBST::sort_frames(){
 	merge_sort(&frame,0,frame.size());
 	/*
 	printf("After Sort :\n");
@@ -332,7 +333,7 @@ void LocationSolver::sort_frames(){
 }
 
 
-xyz_t *LocationSolver::weighted_center(){
+xyz_t * LocationSolverBST::weighted_center(){
 	xyz_t result_vector;
 	precision_t strength_sum = 0;
 	
@@ -356,7 +357,7 @@ xyz_t *LocationSolver::weighted_center(){
 }
 
 
-xyz_t *LocationSolver::find_center(){
+xyz_t * LocationSolverBST::find_center(){
 	xyz_t result_vector;
 	size_t size = frame.size();
 	
